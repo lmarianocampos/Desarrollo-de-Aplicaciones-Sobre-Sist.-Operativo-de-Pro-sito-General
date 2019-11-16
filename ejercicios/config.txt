@@ -1,0 +1,10 @@
+path=/home/user/data.txt
+timeout=5
+
+autostart=1
+backup=15:30
+
+cache_folder=/tmp/cache
+serial=/dev/ttyUSB01
+
+

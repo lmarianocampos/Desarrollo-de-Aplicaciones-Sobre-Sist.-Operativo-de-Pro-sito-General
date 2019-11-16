@@ -1,0 +1,10 @@
+listaNombre = []
+listaNombre.append("Mariano")
+listaNombre.append("Luis")
+listaNombre.append("Campos")
+listaNombre.append("Cruz")
+listaNombre.append("Ramiro")
+listaNombre.append("abel")
+print (listaNombre)
+listaNombre.sort(key = str.lower)
+print (listaNombre)

@@ -1,0 +1,3 @@
+Mariano=37
+Patricio=27
+Jack=4098
