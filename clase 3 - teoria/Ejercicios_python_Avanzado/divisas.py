@@ -1,3 +1,5 @@
+import json
+
 class Divisa:
     def __init__(self, id, divisaName,buy,sale):
         self.setId(id)
@@ -26,6 +28,9 @@ class Divisa:
     def getBuy(self):
         return self.__buy
 
+    def getSale(self):
+        return self.__sale
+
     def getPathFileCSV(pathFileConfig):
         with open (pathFileConfig,"r",encoding="UTF-8")as f:
             CSVFilepath = f.readline()
@@ -51,8 +56,39 @@ class Divisa:
                 s = s.split(",")
                 d = Divisa(int(s[0]),s[1],s[2],s[3])# creo un objeto divisa
                 divisas.append(d)
-            print(divisas)     
+        return divisas
 
-Divisa.DivisaListCreate("config.txt")
+    @staticmethod 
+    def GenerateJson(divisasList):
+        key =['id','value1','value2','name']
+        dvsList = []
+        for item in divisasList:
+            d = {}
+           
+            k = key[0]
+            v = int(item.getId())
+            d[k]=v
+            
+            k = key[1]
+            v = float(item.getBuy())
+            d[k]=v
 
-        
+            k = key[2]
+            v = float(item.getSale())
+            d[k]=v
+
+            k = key[3]
+            v = item.getDivisaName()
+            d[k]=v
+            dvsList.append(d)
+        dvs =json.dumps(dvsList)
+        return dvs 
+
+"""
+divisa = Divisa.DivisaListCreate("config.txt")
+print (divisa)
+print("\n")
+sendDivisas = Divisa.GenerateJson(divisa)
+print (sendDivisas)
+print(type(sendDivisas))
+"""
