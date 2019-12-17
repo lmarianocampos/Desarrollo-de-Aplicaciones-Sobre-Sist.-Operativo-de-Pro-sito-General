@@ -1,94 +1,90 @@
 import json
 
 class Divisa:
-    def __init__(self, id, divisaName,buy,sale):
-        self.setId(id)
-        self.setDivisaName(divisaName)
-        self.setBuy(buy)
-        self.setSale(sale)
+    def __init__(self, id, divisa_name,buy,sale):
+        self.set_id(id)
+        self.set_divisa_name(divisa_name)
+        self.set_buy(buy)
+        self.set_sale(sale)
 
-    def setId(self,id):
+    def set_id(self,id):
         if id > 0:
             self.__id = id
 
-    def setDivisaName(self,divisaName):
-        self.__divisaName = divisaName
+    def set_divisa_name(self,divisa_name):
+        self.__divisa_name = divisa_name
     
-    def setBuy(self,buy):
+    def set_buy(self,buy):
         self.__buy = buy
 
-    def setSale (self,sale):
+    def set_sale (self,sale):
         self.__sale = sale
-    def getId(self):
+    def get_id(self):
         return self.__id
 
-    def getDivisaName(self):
-        return self.__divisaName
+    def get_divisa_name(self):
+        return self.__divisa_name
 
-    def getBuy(self):
+    def get_buy(self):
         return self.__buy
 
-    def getSale(self):
+    def get_sale(self):
         return self.__sale
 
-    def getPathFileCSV(pathFileConfig):
-        with open (pathFileConfig,"r",encoding="UTF-8")as f:
-            CSVFilepath = f.readline()
-            CSVFilepath = CSVFilepath.strip("\n")
-            CSVFilepath =CSVFilepath.strip("\t")
-        return CSVFilepath
+    @staticmethod 
+    def get_path_file_csv(path_file_config):
+        try:
+            with open (path_file_config,"r",encoding="UTF-8")as f:
+                csv_file_path = f.readline()
+                csv_file_path = csv_file_path.strip("\n")
+                csv_file_path = csv_file_path.strip("\t")
+        except IOError:
+            print("error accessing file Config.txt")
+        return csv_file_path
 
     @staticmethod
-    def DivisaListCreate(pathFileConfig):
-        #pathFileCSV = getPathFileCSV(pathFileConfig)
-        with open (pathFileConfig,"r",encoding="UTF-8")as f:
-            CSVFilepath = f.readline()
-            CSVFilepath = CSVFilepath.strip("\n")
-            CSVFilepath =CSVFilepath.strip("\t")
+    def divisa_list_create(path_file_config):
         divisas = []
-        with open(CSVFilepath,"r",encoding="UTF-8")as f:
-            s = f.readline()
-            while True:
+        csv_file_path = Divisa.get_path_file_csv(path_file_config)
+        try :
+            with open(csv_file_path,"r",encoding="UTF-8")as f:
                 s = f.readline()
-                if s =="":
-                    break # llego al final del archivo
-                s = s.strip("\n")
-                s = s.split(",")
-                d = Divisa(int(s[0]),s[1],s[2],s[3])# creo un objeto divisa
-                divisas.append(d)
+                while True:
+                    s = f.readline()
+                    if s =="":
+                        break # llego al final del archivo
+                    s = s.strip("\n")
+                    s = s.split(",")
+                    d = Divisa(int(s[0]),s[1],s[2],s[3])# creo un objeto divisa
+                    divisas.append(d)
+        except IOError:
+            print("error accessing file file.csv")
         return divisas
 
     @staticmethod 
-    def GenerateJson(divisasList):
+    def generate_json(divisas_list):
         key =['id','value1','value2','name']
-        dvsList = []
-        for item in divisasList:
+        dvs_list = []
+        for item in divisas_list:
             d = {}
            
             k = key[0]
-            v = int(item.getId())
+            v = int(item.get_id())
             d[k]=v
             
             k = key[1]
-            v = float(item.getBuy())
+            v = float(item.get_buy())
             d[k]=v
 
             k = key[2]
-            v = float(item.getSale())
+            v = float(item.get_sale())
             d[k]=v
 
             k = key[3]
-            v = item.getDivisaName()
+            v = item.get_divisa_name()
             d[k]=v
-            dvsList.append(d)
-        dvs =json.dumps(dvsList)
+            dvs_list.append(d)
+        dvs =json.dumps(dvs_list)
         return dvs 
 
-"""
-divisa = Divisa.DivisaListCreate("config.txt")
-print (divisa)
-print("\n")
-sendDivisas = Divisa.GenerateJson(divisa)
-print (sendDivisas)
-print(type(sendDivisas))
-"""
+

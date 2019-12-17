@@ -2,7 +2,7 @@ import threading
 import time
 import signal
 from divisas import Divisa
-from socket import *
+from SocketUdpClient import ClientUDP
 
 class PService(threading.Thread):
     def __init__(self):
@@ -10,45 +10,36 @@ class PService(threading.Thread):
         self.shutdown_flag = threading.Event()
        
     def run(self):
-         # creamos un socket y especificamos el tipo de protocolo UDP
-        clientSocket =  socket(AF_INET,SOCK_DGRAM)
-        #establecemos ip y puerto del servidor    
-        serverAddress = ('localhost',10000)
+        c_sock = ClientUDP(10000)     
+        print('Thread Socket Client #%s started' % self.ident)
         
-        print('Thread Socket Client#%s started' % self.ident)
-        
-        while not self.shutdown_flag.is_set():
-            time.sleep(5)
+        while not self.shutdown_flag.is_set():            
             #leer el archivo mediante la función 
             #esto me devuelve una lista 
-            divisa = Divisa.DivisaListCreate("config.txt")
-            print ("leyendo archivo")
+            divisa = Divisa.divisa_list_create("config.txt")
             #convierto la lista a JSON
-            sendDivisas = Divisa.GenerateJson(divisa)
-            # envío al servidor el mensaje
-            print(sendDivisas)
-            try:
-                clientSocket.sendto(sendDivisas.encode('UTF-8'),serverAddress)        
-                #aqui quedara boqueado hasta recivir una respuesta del servidor
-                data, server = clientSocket.recvfrom(512)
-                print (data)
-            except:
-                raise ServiceExit()
-                #clientSocket.close()
+            send_divisas = Divisa.generate_json(divisa)
+            #envío al servidor el mensaje
+            c_sock.send__message(send_divisas)
+            value = c_sock.receive_message() 
+            if value == True:
+                print("OK")
+            self.shutdown_flag.wait(30)  
+           
         print ("Socket Cliente Closed")
-        clientSocket.close()    
-        print('Thread Socket Client#%s Stopped' % self.ident)
+        c_sock.sock_close()
+        print('Thread Socket Client #%s Stopped' % self.ident)
 
 class ServiceExit(Exception):
     pass
 
-def ServiceShutdown(signalReceive,frame):
-    print ("Señal Capurada(Crtl+C):%d"% signalReceive)
+def service_shutdown(signal_receive,frame):
+    print ("captured signal(Crtl+C):%d"% signal_receive)
     raise ServiceExit()
 
 def main():
-    signal.signal(signal.SIGINT,ServiceShutdown)
-    print ("Iniciando el programa Main()")
+    signal.signal(signal.SIGINT,service_shutdown)
+    print ("starting the main program")
 
     try:
         pS1= PService()
@@ -61,6 +52,6 @@ def main():
         pS1.shutdown_flag.set()
         pS1.join()
         
-    print ("Finalizando el programa Main()")
+    print ("finishing the main program")
 main()
     
