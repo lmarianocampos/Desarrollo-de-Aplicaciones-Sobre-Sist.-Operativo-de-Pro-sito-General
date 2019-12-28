@@ -1,0 +1,41 @@
+ej1-3
+	SELECT u.name, u.lastname, j.description
+	FROM Users u INNER JOIN Jobs j ON u.idJob= j.idJob
+ej1-4
+	SELECT u.name, u.lastname, j.description, al.timestamp
+	FROM Users u INNER JOIN Jobs j ON u.idJob= j.idJob INNER JOIN AccessLogs al ON al.idUser=u.idUser
+	WHERE j.description ="Gerente" 
+	ORDER BY al.timestamp DESC
+	LIMIT 5
+ej2-1
+	SELECT ls.valueSensor, s.unit,ls.timestamp
+	FROM LogSensors ls INNER JOIN Sensors s ON s.idSensor=ls.idSensor
+	WHERE s.idType=1
+	ORDER BY ls.timestamp desc
+	LIMIT 3
+eje2-2
+	SELECT ls.valueSensor, s.unit,ls.timestamp
+	FROM LogSensors ls INNER JOIN Sensors s ON s.idSensor=ls.idSensor
+	WHERE s.idType=1
+	ORDER BY ls.timestamp desc 
+	LIMIT 2
+eje2-3
+	SELECT datetime(ls.timestamp,'unixepoch')
+	FROM LogSensors ls INNER JOIN Sensors s ON ls.idSensor=s.idSensor
+	WHERE S.idSensor=2 AND ls.valueSensor > 50
+eje2-4
+	SELECT s.name,s.unit, st.description
+	FROM Sensors s INNER JOIN SensorsTypes st ON s.idType=st.id
+eje2-5
+	SELECT s.name,s.unit, st.description
+	FROM Sensors s INNER JOIN SensorsTypes st ON s.idType=st.id
+	WHERE st.id=1
+eje2-6
+	SELECT s.idType, s.name, avg(ls.ValueSensor) as Valor_Promedio
+	FROM SensorsTypes st INNER JOIN Sensors s ON st.id=s.idType INNER JOIN LogSensors ls ON s.idSensor= ls.idSensor
+	WHERE ls.idSensor= 4 
+eje2-7 
+	SELECT s.idType, s.name,max(ls.valueSensor), s.unit, datetime(ls.timestamp,'unixepoch')
+	FROM SensorsTypes st INNER JOIN Sensors s ON st.id=s.idType INNER JOIN LogSensors ls ON s.idSensor= ls.idSensor
+	WHERE ls.idSensor=1 OR ls.idSensor=3 
+
