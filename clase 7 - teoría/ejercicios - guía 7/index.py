@@ -3,7 +3,7 @@ import sqlite3
 from flask import g
 from controllerDevices import ControllerDevices
 from ControllerDevice import ControllerDevice
-
+from ControllerLog import ControllerLog
 app = Flask(__name__)
 
 #************** Manejo de DB ****************************
@@ -36,11 +36,16 @@ def divaces():
 	#return "data:"+str(c.fetchall())
     cont = ControllerDevices(app,request,get_db())
     return cont.get()
+
 @app.route('/device/<id_dev>',methods = ['PUT'])
 def set_state_device(id_dev):
         cont = ControllerDevice(app,request,get_db())
         return cont.put(id_dev)
 
+@app.route('/log',methods = ['GET'])
+def log():
+    cont = ControllerLog(app,request,get_db())
+    return cont.get()
 
 if __name__ == '__main__':
 	app.debug = True

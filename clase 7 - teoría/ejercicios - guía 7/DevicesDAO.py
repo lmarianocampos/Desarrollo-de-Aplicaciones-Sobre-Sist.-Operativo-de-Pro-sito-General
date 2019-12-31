@@ -14,11 +14,15 @@ class DevicesDAO:
 
         return list_dev
     def set_state(self,id_dev,state):
-        if state =="0" or state=="1": 
+        if state =='0' or state=='1': 
+            print("\n entre al if")
             try:
+                print("\n entre al try")
                 params = (state,id_dev,)
                 self.c.execute('UPDATE Devices SET status=? WHERE id=?',params )
+                print("\n volvi del udpdate")
                 self.db.commit()
+                print("\n actualizo la tabla dispositivo")
                 return True
             except:
                 return False
