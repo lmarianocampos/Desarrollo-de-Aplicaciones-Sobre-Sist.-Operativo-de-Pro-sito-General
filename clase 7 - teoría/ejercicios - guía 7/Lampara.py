@@ -22,11 +22,16 @@ class Lampara:
             lista_obj.append(l)           
         return lista_obj
         
-    @staticmethod
+    @staticmethod #identifico cual lampara fue modificada ON, OFF
     def comparar_obj_de_lista(lis_act,lis_ant):
+        lis =[]
         for item_act in lis_act:
             for item_ant in lis_ant:
                 if item_act.id == item_ant.id:
                     if item_act.status!= item_ant.status:
                         print("Enviar:",item_act.status)
                         print(item_act.name)
+                        #crear una lista de tuplas con la ip y estado
+                        t=(item_act.ip,item_act.status)
+                        lis.append(t)
+        return lis                
